@@ -2,7 +2,7 @@ import sys
 
 class Space(object):
 
-    def __init__(self, frame_width, frame_height, lim_x=1000, lim_y=1000):
+    def __init__(self, frame_width, frame_height, lim_x, lim_y):
         self._lim_x = lim_x
         self._lim_y = lim_y
         self._wd = frame_width
