@@ -29,7 +29,20 @@ class Can(object):
             self._space.putc(vec.x, vec.y, c) 
             vec.x += self._inc_x
 
-    # TODO: printv
+
+    def printv(self, val, vec):
+        """Print val vertically"""
+        if type(vec) is not Vec:
+            return
+        for c in str(val):
+            if not self._space.range_y(vec.y) and self._wrap_y:
+                vec.y = 0
+                vec.x += self._inc_x
+            if not self._space.range_x(vec.x) and self._wrap_x:
+                vec.x = 0
+            self._space.putc(vec.x, vec.y, c)
+            vec.y += self._inc_y
+            
 
     def move_frame(self, vec):
         if type(vec) is not Vec:
