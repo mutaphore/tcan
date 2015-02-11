@@ -66,6 +66,7 @@ class KeyListener(Thread):
         kwargs["name"] = "KeyListenerThread"
         super(KeyListener, self).__init__(*args, **kwargs)
         self.frame = frame
+        self.key_event = key_event
             
     
     def run(self):
@@ -77,17 +78,32 @@ class KeyListener(Thread):
             if c == '\x04':
                 print "Exiting"
                 break
+            self.key_event.clear()
             try:
                 index = keys.index(c)
-                if index >= 0:
-                    print index
-                    vec = dirs[index]
-                    self.frame.move(vec)
+                print index
+                vec = dirs[index]
+                self.frame.move(vec)
+                self.key_event.set()
             except ValueError:
                 print "Invalid key"
 
+
 class Drawer(Thread):
-        
+    
+    def __init__(self, frame, key_event, *args, **kwargs):
+        kwargs["name"] = "DrawerThread"
+        super(Drawer, self).__init__(*args, **kwargs)
+        self.frame = frame
+        self.key_event = key_event
+
+
+    def run(self):
+        while True:
+            self.key_event.wait() 
+        #    os.system('cls' if os.name == 'nt' else 'clear')    
+            self.frame.draw() 
+
 
 if __name__ == "__main__":
     
@@ -96,10 +112,13 @@ if __name__ == "__main__":
     frame.printh("hello world my name is Dewei", Vec(75, 4))
     frame.printh(5.52e10, Vec(6, 10))
 
+    frame.draw()
+
     key_event = Event()
     key_listener = KeyListener(frame, key_event)
+    drawer = Drawer(frame, key_event)
+    drawer.start()
     key_listener.start()
     key_listener.join()
 #        frame.draw()
-#        os.system('cls' if os.name == 'nt' else 'clear')    
 
