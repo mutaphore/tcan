@@ -57,6 +57,18 @@ class TextFrame(object):
     # 0----+----1----+----2
     def draw(self, ruler=False):
         self._space.draw_frame()
+
+
+class KeyListener(Thread):
+    
+    def __init__(self):
+        super(KeyListener, self).__init__()
+            
+    
+    
+    def run(self):
+        while True:
+            
         
 
 if __name__ == "__main__":
@@ -66,7 +78,7 @@ if __name__ == "__main__":
     frame.printh("hello world my name is Dewei", Vec(75, 4))
     frame.printh(5.52e10, Vec(6, 10))
     frame.move(Vec(10, 0))
-    while True:
-        frame.draw()
-        os.system('cls' if os.name == 'nt' else 'clear')    
+#    while True:
+#        frame.draw()
+#        os.system('cls' if os.name == 'nt' else 'clear')    
 
