@@ -76,17 +76,16 @@ class KeyListener(Thread):
         while True:
             c = getc()
             if c == '\x04':
-                print "Exiting"
+#                print "Exiting"
                 break
-            self.key_event.clear()
             try:
                 index = keys.index(c)
-                print index
+#                print index
                 vec = dirs[index]
                 self.frame.move(vec)
                 self.key_event.set()
             except ValueError:
-                print "Invalid key"
+                pass
 
 
 class Drawer(Thread):
@@ -101,8 +100,9 @@ class Drawer(Thread):
     def run(self):
         while True:
             self.key_event.wait() 
-        #    os.system('cls' if os.name == 'nt' else 'clear')    
+            os.system('cls' if os.name == 'nt' else 'clear')    
             self.frame.draw() 
+            self.key_event.clear()
 
 
 if __name__ == "__main__":
