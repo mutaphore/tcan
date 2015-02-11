@@ -2,8 +2,8 @@
 # http://stackoverflow.com/questions/18257522/python-detect-keypress
 
 class Getch:
-    """Gets a single character from standard input.  Does not echo to the
-screen."""
+    """Gets a single character from standard input. 
+       Does not echo to the screen."""
     def __init__(self):
         try:
             self.impl = _GetchWindows()

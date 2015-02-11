@@ -2,9 +2,10 @@
 
 import sys
 import os
-from threading import Thread
+from threading import Thread, Event
 
 from space import Space, Vec
+from getch import Getch
 
 class TextFrame(object):
 
@@ -61,14 +62,31 @@ class TextFrame(object):
 
 class KeyListener(Thread):
     
-    def __init__(self):
-        super(KeyListener, self).__init__()
+    def __init__(self, frame, key_event, *args, **kwargs):
+        kwargs["name"] = "KeyListenerThread"
+        super(KeyListener, self).__init__(*args, **kwargs)
+        self.frame = frame
             
-    
     
     def run(self):
+        getc = Getch()
+        keys = ['h', 'l', 'j', 'k']
+        dirs = [Vec(-1, 0), Vec(1, 0), Vec(0, -1), Vec(0, 1)]
         while True:
-            
+            c = getc()
+            if c == '\x04':
+                print "Exiting"
+                break
+            try:
+                index = keys.index(c)
+                if index >= 0:
+                    print index
+                    vec = dirs[index]
+                    self.frame.move(vec)
+            except ValueError:
+                print "Invalid key"
+
+class Drawer(Thread):
         
 
 if __name__ == "__main__":
@@ -77,8 +95,11 @@ if __name__ == "__main__":
     frame.printh(1234, Vec(0, 0))
     frame.printh("hello world my name is Dewei", Vec(75, 4))
     frame.printh(5.52e10, Vec(6, 10))
-    frame.move(Vec(10, 0))
-#    while True:
+
+    key_event = Event()
+    key_listener = KeyListener(frame, key_event)
+    key_listener.start()
+    key_listener.join()
 #        frame.draw()
 #        os.system('cls' if os.name == 'nt' else 'clear')    
 
