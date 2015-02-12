@@ -62,11 +62,12 @@ class TextFrame(object):
 
 class KeyListener(Thread):
     
-    def __init__(self, frame, key_event, *args, **kwargs):
+    def __init__(self, frame, key_event, terminate_event, *args, **kwargs):
         kwargs["name"] = "KeyListenerThread"
         super(KeyListener, self).__init__(*args, **kwargs)
         self.frame = frame
         self.key_event = key_event
+        self.terminate_event = terminate_event
             
     
     def run(self):
@@ -75,50 +76,49 @@ class KeyListener(Thread):
         dirs = [Vec(-1, 0), Vec(1, 0), Vec(0, -1), Vec(0, 1)]
         while True:
             c = getc()
+            self.key_event.set()
             if c == '\x04':
-#                print "Exiting"
+                self.terminate_event.set()
                 break
             try:
                 index = keys.index(c)
-#                print index
                 vec = dirs[index]
                 self.frame.move(vec)
-                self.key_event.set()
             except ValueError:
                 pass
 
 
 class Drawer(Thread):
     
-    def __init__(self, frame, key_event, *args, **kwargs):
+    def __init__(self, frame, key_event, terminate_event, *args, **kwargs):
         kwargs["name"] = "DrawerThread"
         super(Drawer, self).__init__(*args, **kwargs)
         self.frame = frame
         self.key_event = key_event
+        self.terminate_event = terminate_event
 
 
     def run(self):
-        while True:
+        while not self.terminate_event.is_set():
             self.key_event.wait() 
-            os.system('cls' if os.name == 'nt' else 'clear')    
+#            os.system('cls' if os.name == 'nt' else 'clear')    
             self.frame.draw() 
             self.key_event.clear()
 
 
 if __name__ == "__main__":
     
-    frame = TextFrame(80, 30, lim_x=80, lim_y=30)
+    frame = TextFrame(80, 30, lim_x=800, lim_y=300)
     frame.printh(1234, Vec(0, 0))
     frame.printh("hello world my name is Dewei", Vec(75, 4))
     frame.printh(5.52e10, Vec(6, 10))
 
-    frame.draw()
-
     key_event = Event()
-    key_listener = KeyListener(frame, key_event)
-    drawer = Drawer(frame, key_event)
-    drawer.start()
+    terminate_event = Event()
+    key_listener = KeyListener(frame, key_event, terminate_event)
+    drawer = Drawer(frame, key_event, terminate_event)
     key_listener.start()
+    drawer.start()
     key_listener.join()
-#        frame.draw()
+    drawer.join()
 
