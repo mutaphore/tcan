@@ -101,9 +101,9 @@ class Drawer(Thread):
     def run(self):
         while not self.terminate_event.is_set():
             self.key_event.wait() 
-#            os.system('cls' if os.name == 'nt' else 'clear')    
-            self.frame.draw() 
             self.key_event.clear()
+            os.system('cls' if os.name == 'nt' else 'clear')    
+            self.frame.draw() 
 
 
 if __name__ == "__main__":

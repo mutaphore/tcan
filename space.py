@@ -60,8 +60,11 @@ class Space(object):
 
 
     def draw_frame(self): 
-        sys.stdout.write("".join(["-"] * (self._wd + 2 )) + "\n")
+        #sys.stdout.write("".join(["-"] * (self._wd + 2 )) + "\n")
+        print "".join(["-"] * (self._wd + 2 ))
         for row in self._mat[self._y:(self._y+self._ht)]: 
             line = map(lambda x : " " if x == None else x, row[self._x:(self._x+self._wd)])
-            sys.stdout.write("|" + "".join(line) + "|\n")
-        sys.stdout.write("".join(["-"] * (self._wd + 2 )) + "\n")
+            #sys.stdout.write("|" + "".join(line) + "|\n")
+            print ("|" + "".join(line) + "|")
+        #sys.stdout.write("".join(["-"] * (self._wd + 2 )) + "\n")
+        print "".join(["-"] * (self._wd + 2 ))

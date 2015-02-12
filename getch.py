@@ -1,4 +1,4 @@
-# Get a single character from stdin for Unix and Windows
+# Get a single character from stdin for Unix or Windows
 # http://stackoverflow.com/questions/18257522/python-detect-keypress
 
 class Getch:
@@ -22,7 +22,8 @@ class _GetchUnix:
         fd = sys.stdin.fileno()
         old_settings = termios.tcgetattr(fd)
         try:
-            tty.setraw(sys.stdin.fileno())
+            #tty.setraw(sys.stdin.fileno())
+            tty.setcbreak(sys.stdin.fileno())
             ch = sys.stdin.read(1)
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
