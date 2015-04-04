@@ -73,7 +73,7 @@ class KeyListener(Thread):
     def run(self):
         getc = Getch()
         keys = ['h', 'l', 'j', 'k']
-        dirs = [Vec(-1, 0), Vec(1, 0), Vec(0, -1), Vec(0, 1)]
+        dirs = [Vec(-1, 0), Vec(1, 0), Vec(0, 1), Vec(0, -1)]
         while True:
             c = getc()
             self.key_event.set()
@@ -99,6 +99,8 @@ class Drawer(Thread):
 
 
     def run(self):
+        os.system('cls' if os.name == 'nt' else 'clear')    
+        self.frame.draw() 
         while not self.terminate_event.is_set():
             self.key_event.wait() 
             self.key_event.clear()
